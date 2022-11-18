@@ -14,11 +14,12 @@ async function setupDb() {
     const client = new Client(dbConfig);
     await client.connect();
     const sql = await getSqlFromFile();
-    const res = await client.query(sql);
-    console.log(res);
+    await client.query(sql);
     await client.end();
+    console.log('Database setup success');
   } catch (err) {
     console.error(err);
+    process.exit(1);
   }
 }
 
