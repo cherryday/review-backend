@@ -1,15 +1,23 @@
 import './env';
-import fastify from 'fastify';
-import './db';
+// import path from 'path';
+import Fastify from 'fastify';
+// import fastifyStatic from '@fastify/static';
+import fastifyMultipart from '@fastify/multipart';
 import reviewRoutes from './review/review.routes';
+import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 
-const server = fastify();
+const fastify = Fastify().withTypeProvider<TypeBoxTypeProvider>();
 
-server.register(reviewRoutes, { prefix: 'api/review' });
+// fastify.register(fastifyStatic, {
+//   root: path.join(__dirname, 'public'),
+//   prefix: '/public/',
+// });
+fastify.register(fastifyMultipart);
+fastify.register(reviewRoutes, { prefix: 'api/review' });
 
 async function main() {
   try {
-    await server.listen({ port: 3000 });
+    await fastify.listen({ port: 3000 });
   } catch (err) {
     console.log(err);
     process.exit(1);

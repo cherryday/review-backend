@@ -3,3 +3,8 @@ CREATE TABLE reviews (
   title VARCHAR(255) NOT NULL,
   description TEXT NOT NULL
 )
+
+CREATE TABLE review_images (
+  id SERIAL PRIMARY KEY,
+  src TEXT NOT NULL
+)

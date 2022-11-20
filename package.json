@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start:dev": "nodemon ./src/main.ts",
-    "db": "ts-node ./scripts/setupDb"
+    "db": "ts-node ./scripts/setupDb.ts"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/cherryday/review-backend#readme",
   "dependencies": {
+    "@fastify/multipart": "^7.3.0",
+    "@fastify/static": "^6.5.0",
     "dotenv": "^16.0.3",
     "fastify": "^4.9.2",
     "pg": "^8.8.0"
