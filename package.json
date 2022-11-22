@@ -22,6 +22,7 @@
   "dependencies": {
     "@fastify/multipart": "^7.3.0",
     "@fastify/static": "^6.5.0",
+    "ajv": "^8.11.2",
     "dotenv": "^16.0.3",
     "fastify": "^4.9.2",
     "pg": "^8.8.0"

@@ -1,35 +1,13 @@
-// import fs from 'fs';
-// import path from 'path';
-// import util from 'util';
-// import { pipeline } from 'stream';
 import { FastifyInstance, FastifyRequest } from 'fastify';
-// import { pool } from '../db';
 import {
   reviewsSchema,
   ReviewsQuery,
   reviewSchema,
   ReviewParams,
+  createReviewSchema,
+  ReviewBody,
 } from './review.schema';
 import reviewRepository from './review.repository';
-
-// const pump = util.promisify(pipeline);
-
-const createReviewSchema = {
-  body: {
-    type: 'object',
-    properties: {
-      title: {
-        type: 'string',
-        format: 'email',
-        description: 'User account email address',
-      },
-      description: {
-        type: 'string',
-      },
-    },
-    required: ['title', 'description'],
-  },
-};
 
 async function reviewRoutes(fastify: FastifyInstance) {
   fastify.get<{ Params: ReviewParams }>(
@@ -50,42 +28,33 @@ async function reviewRoutes(fastify: FastifyInstance) {
     },
   );
 
+  fastify.post<{ Body: ReviewBody }>(
+    '/',
+    { schema: createReviewSchema },
+    async (request, reply) => {
+      const review = await reviewRepository.createOne(request.body);
+      reply.code(201).send(review);
+    },
+  );
+
+  fastify.patch<{ Body: ReviewBody; Params: ReviewParams }>(
+    '/:id',
+    { schema: createReviewSchema },
+    async (request, reply) => {
+      const review = await reviewRepository.updateOne(
+        request.params.id,
+        request.body,
+      );
+      reply.send(review);
+    },
+  );
+
   fastify.delete<{ Params: ReviewParams }>(
     '/:id',
     {},
     async (request, reply) => {
       await reviewRepository.deleteOne(request.params.id);
       reply.send();
-    },
-  );
-
-  fastify.post(
-    '/',
-    { schema: createReviewSchema },
-    async (
-      request: FastifyRequest<{
-        Body: { title: string; description: string };
-      }>,
-      reply,
-    ) => {
-      // const data = await request.file();
-
-      // await pump(
-      //   data!.file,
-      //   fs.createWriteStream(path.resolve('photo.png')),
-      //   // fs.createWriteStream(path.resolve('files', 'photo.png')),
-      // );
-      // console.log(request.body, data);
-      // reply.send('test');
-      const { title, description } = request.body;
-      console.log(title, description);
-      // const response = await pool.query(
-      //   'INSERT INTO reviews (title, description) VALUES ($1, $2) RETURNING *',
-      //   [title, description],
-      // );
-      // reply.code(201).send(response.rows[0]);
-      // },
-      reply.send('test');
     },
   );
 }
